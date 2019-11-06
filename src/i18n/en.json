@@ -333,6 +333,7 @@
     "static": "Static",
     "staticMessage": "This is a static modal, backdrop or escape click will not close it.",
     "staticTitle": "Static Modal",
+    "memoModalTitle": "메모 입력",
     "title": "Modals",
     "titlePosition": "Modal Position",
     "top": "Top",

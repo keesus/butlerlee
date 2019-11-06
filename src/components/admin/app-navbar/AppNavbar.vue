@@ -1,11 +1,11 @@
 <template>
   <va-navbar class="app-navbar">
     <header-selector slot="selector" :minimized.sync="minimizedProxy"/>
-    <template slot="logo">
+    <!-- <template slot="logo">
       <va-icon-vuestic/>
-    </template>
+    </template> -->
     <template slot="center">
-      <div class="row flex-nowrap align--center justify--space-between">
+      <div class="row flex-nowrap align--center justify--space-between hidden">
         <span class="va-navbar__text no-wrap">
           {{$t('navbar.messageUs')}}&nbsp;
           <a
@@ -30,14 +30,14 @@
         </div>
       </div>
     </template>
-    <div class="app-navbar__actions row flex-nowrap align--center">
+    <div class="app-navbar__actions row flex-nowrap align--center hidden">
       <color-dropdown class="va-navbar__item"/>
       <message-dropdown class="va-navbar__item"/>
       <notification-dropdown class="va-navbar__item"/>
-      <!--<settings-dropdown-->
-        <!--class="va-navbar__item"-->
-        <!--:navbar-view.sync="navbarViewProxy"-->
-      <!--/>-->
+      <settings-dropdown
+        class="va-navbar__item"
+        :navbar-view.sync="navbarViewProxy"
+      />
       <language-dropdown class="va-navbar__item"/>
       <profile-dropdown class="va-navbar__item">
         <span>{{userName}}</span>

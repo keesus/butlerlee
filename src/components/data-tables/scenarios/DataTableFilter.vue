@@ -24,13 +24,13 @@
       :fields="fields"
       :data="filteredData"
       :per-page="parseInt(perPage)"
-      @row-clicked="showUser"
-      clickable
     >
-      <!-- <template slot="trend" slot-scope="props">
-        <va-icon :name="getTrendIcon(props.rowData)" :color="getTrendColor(props.rowData)" />
-      </template> -->
-
+      <template slot="productName" slot-scope="props">
+        <div>
+          {{props.rowData.productName}}
+          <button @click="showUser(props.rowData)">edit</button>
+        </div>
+      </template>
       <template slot="status" slot-scope="props">
         <va-badge :color="props.rowData.color">
           {{ props.rowData.status }}
@@ -41,22 +41,25 @@
           {{ props.rowData.batteryStatus }}
         </va-badge>
       </template>
-
-      <template slot="actions" slot-scope="props">
-        <va-button v-if="props.rowData.hasReport" small outline color="danger" class="ma-0">
-          {{ $t('tables.report') }}
-        </va-button>
+      <template slot="memo" slot-scope="props">
+        <div>
+          {{props.rowData.memo}}
+          <button @click="showUser(props.rowData)">edit</button>
+        </div>
       </template>
     </va-data-table>
+
     <va-modal
       v-model="showStaticModal"
-      :title=" $t('modal.staticTitle') "
+      size="large"
+      :title=" $t('modal.memoModalTitle') "
       cancelClass="none"
-      :okText=" $t('modal.close') "
-      :message=" $t('modal.staticMessage') "
+      :okText=" $t('modal.confirm') "
       noOutsideDismiss
       noEscDismiss
-    />
+    >
+      <textarea name="" id="" cols="50" rows="5"></textarea>
+    </va-modal>
   </va-card>
 </template>
 
@@ -77,20 +80,8 @@ export default {
   computed: {
     fields () {
       return [ {
-        name: 'productName',
+        name: '__slot:productName',
         title: this.$t('tables.headings.productName'),
-        width: '10%',
-      }, {
-        name: 'address',
-        title: this.$t('tables.headings.address'),
-        width: '30%',
-      }, {
-        name: 'phoneNumber',
-        title: this.$t('tables.headings.phoneNumber'),
-        width: '13%',
-      }, {
-        name: 'joinedAt',
-        title: this.$t('tables.headings.joinedAt'),
         width: '10%',
       }, {
         name: '__slot:status',
@@ -105,14 +96,9 @@ export default {
         title: this.$t('tables.headings.batteryStatus'),
         width: '3%',
       }, {
-        name: 'memo',
+        name: '__slot:memo',
         title: this.$t('tables.headings.memo'),
-        width: '15%',
-      }, {
-        name: '__slot:actions',
-        title: '안부확인',
-        dataClass: 'text-center',
-        width: '10%',
+        width: '40%',
       }]
     },
     filteredData () {
