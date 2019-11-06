@@ -27,22 +27,36 @@
       @row-clicked="showUser"
       clickable
     >
-      <template slot="trend" slot-scope="props">
+      <!-- <template slot="trend" slot-scope="props">
         <va-icon :name="getTrendIcon(props.rowData)" :color="getTrendColor(props.rowData)" />
-      </template>
+      </template> -->
 
       <template slot="status" slot-scope="props">
         <va-badge :color="props.rowData.color">
           {{ props.rowData.status }}
         </va-badge>
       </template>
+      <template slot="batteryStatus" slot-scope="props">
+        <va-badge :color="props.rowData.color">
+          {{ props.rowData.batteryStatus }}
+        </va-badge>
+      </template>
 
       <template slot="actions" slot-scope="props">
-        <va-button v-if="props.rowData.hasReport" small color="danger" class="ma-0">
+        <va-button v-if="props.rowData.hasReport" small outline color="danger" class="ma-0">
           {{ $t('tables.report') }}
         </va-button>
       </template>
     </va-data-table>
+    <va-modal
+      v-model="showStaticModal"
+      :title=" $t('modal.staticTitle') "
+      cancelClass="none"
+      :okText=" $t('modal.close') "
+      :message=" $t('modal.staticMessage') "
+      noOutsideDismiss
+      noEscDismiss
+    />
   </va-card>
 </template>
 
@@ -57,30 +71,48 @@ export default {
       perPage: '6',
       perPageOptions: ['4', '6', '10', '20'],
       users: users,
+      showStaticModal: false,
     }
   },
   computed: {
     fields () {
-      return [{
-        name: '__slot:trend',
-        width: '30px',
-        height: '45px',
-        dataClass: 'text-center',
+      return [ {
+        name: 'productName',
+        title: this.$t('tables.headings.productName'),
+        width: '10%',
       }, {
-        name: 'fullName',
-        title: this.$t('tables.headings.name'),
+        name: 'address',
+        title: this.$t('tables.headings.address'),
         width: '30%',
+      }, {
+        name: 'phoneNumber',
+        title: this.$t('tables.headings.phoneNumber'),
+        width: '13%',
+      }, {
+        name: 'joinedAt',
+        title: this.$t('tables.headings.joinedAt'),
+        width: '10%',
       }, {
         name: '__slot:status',
-        title: this.$t('tables.headings.status'),
-        width: '20%',
+        title: this.$t('tables.headings.nowStatus'),
+        width: '3%',
       }, {
-        name: 'email',
-        title: this.$t('tables.headings.email'),
-        width: '30%',
+        name: 'lastStatus',
+        title: this.$t('tables.headings.lastStatus'),
+        width: '15%',
+      }, {
+        name: '__slot:batteryStatus',
+        title: this.$t('tables.headings.batteryStatus'),
+        width: '3%',
+      }, {
+        name: 'memo',
+        title: this.$t('tables.headings.memo'),
+        width: '15%',
       }, {
         name: '__slot:actions',
-        dataClass: 'text-right',
+        title: '안부확인',
+        dataClass: 'text-center',
+        width: '10%',
       }]
     },
     filteredData () {
@@ -89,7 +121,7 @@ export default {
       }
 
       return this.users.filter(item => {
-        return item.fullName.toLowerCase().startsWith(this.term.toLowerCase())
+        return item.productName.toLowerCase().startsWith(this.term.toLowerCase())
       })
     },
   },

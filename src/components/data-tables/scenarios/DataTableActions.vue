@@ -48,7 +48,7 @@ export default {
         title: this.$t('tables.headings.country'),
       }, {
         name: '__slot:actions',
-        dataClass: 'text-right',
+        dataClass: '-right',
       }]
     },
   },

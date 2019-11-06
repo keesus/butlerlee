@@ -424,7 +424,7 @@
     "searchByName": "Search by name",
     "searchTrendsBadges": "Search, Trends, Badges",
     "perPage": "Per Page",
-    "report": "Report",
+    "report": "보내기",
     "infiniteScroll": "Infinite Scroll",
     "selectable": "Selectable",
     "selected": "Selected",
@@ -439,7 +439,16 @@
       "firstName": "First Name",
       "lastName": "Last Name",
       "status": "Status",
-      "country": "Country"
+      "country": "Country",
+      "serialNumber": "제품키",
+      "productName": "이름",
+      "nowStatus": "현재상태",
+      "lastStatus": "마지막기록",
+      "batteryStatus": "배터리",
+      "memo": "메모",
+      "address": "주소",
+      "phoneNumber": "연락처",
+      "joinedAt": "가입일시"
     }
   },
   "user": {
