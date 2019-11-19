@@ -449,7 +449,10 @@
       "memo": "메모",
       "address": "주소",
       "phoneNumber": "연락처",
-      "joinedAt": "가입일시"
+      "joinedAt": "가입일시",
+      "pKey": "시리얼넘버",
+      "createdAt": "기록",
+      "connectionStatus": "연결상태"
     }
   },
   "user": {

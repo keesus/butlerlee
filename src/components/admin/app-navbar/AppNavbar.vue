@@ -1,9 +1,7 @@
 <template>
   <va-navbar class="app-navbar">
     <header-selector slot="selector" :minimized.sync="minimizedProxy"/>
-    <!-- <template slot="logo">
-      <va-icon-vuestic/>
-    </template> -->
+    <!-- <img style="width: 52px" src="../../../assets/icons/butlerlee-logo.png" alt=""> -->
     <template slot="center">
       <div class="row flex-nowrap align--center justify--space-between hidden">
         <span class="va-navbar__text no-wrap">
@@ -47,8 +45,6 @@
 </template>
 
 <script>
-import VaIconVuestic
-  from 'vuestic-ui/src/components/vuestic-components/va-icon/va-iconset/VaIconVuestic'
 import HeaderSelector from './components/HeaderSelector'
 import LanguageDropdown from './components/dropdowns/LanguageDropdown'
 import ProfileDropdown from './components/dropdowns/ProfileDropdown'
@@ -62,7 +58,6 @@ export default {
   components: {
     SettingsDropdown,
     ColorDropdown,
-    VaIconVuestic,
     HeaderSelector,
     MessageDropdown,
     NotificationDropdown,
@@ -135,5 +130,13 @@ export default {
       margin: auto;
     }
   }
+}
+
+.va-navbar {
+  background-color: #2f4131 !important;
+}
+
+.va-navbar__shape {
+  display: none;
 }
 </style>

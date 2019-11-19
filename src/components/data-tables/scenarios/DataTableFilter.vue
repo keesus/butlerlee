@@ -25,26 +25,32 @@
       :data="filteredData"
       :per-page="parseInt(perPage)"
     >
+      <template slot="pKey" slot-scope="props">
+        <div>
+          {{props.rowData.meta.serial_number}}
+        </div>
+      </template>
       <template slot="productName" slot-scope="props">
         <div>
-          {{props.rowData.productName}}
-          <button @click="showUser(props.rowData)">edit</button>
+          {{props.rowData.meta.name}}
         </div>
       </template>
       <template slot="status" slot-scope="props">
-        <va-badge :color="props.rowData.color">
-          {{ props.rowData.status }}
-        </va-badge>
+        <va-div>
+          {{ props.rowData.transition_type }}
+        </va-div>
       </template>
-      <template slot="batteryStatus" slot-scope="props">
-        <va-badge :color="props.rowData.color">
-          {{ props.rowData.batteryStatus }}
-        </va-badge>
+      <template slot="createdAt" slot-scope="props">
+        <div>
+          {{ props.rowData.created_at }}
+        </div>
       </template>
       <template slot="memo" slot-scope="props">
         <div>
-          {{props.rowData.memo}}
-          <button @click="showUser(props.rowData)">edit</button>
+          {{props.rowData.note}}
+          <button @click="showStaticModal = true,
+          modalTitle='메모 변경', inputValue=props.rowData.memo,
+          targetTransitionId=props.rowData.id">수정</button>
         </div>
       </template>
     </va-data-table>
@@ -52,20 +58,20 @@
     <va-modal
       v-model="showStaticModal"
       size="large"
-      :title=" $t('modal.memoModalTitle') "
+      :title="modalTitle"
       cancelClass="none"
       :okText=" $t('modal.confirm') "
       noOutsideDismiss
       noEscDismiss
+      v-on:ok="editTransitionMemo(targetTransitionId, inputValue)"
     >
-      <textarea name="" id="" cols="50" rows="5"></textarea>
+      <textarea name="" id="" cols="50" rows="5" v-model="inputValue"></textarea>
     </va-modal>
   </va-card>
 </template>
 
 <script>
 import { debounce } from 'lodash'
-import users from '../../../data/users.json'
 
 export default {
   data () {
@@ -73,13 +79,20 @@ export default {
       term: null,
       perPage: '6',
       perPageOptions: ['4', '6', '10', '20'],
-      users: users,
+      users: [],
       showStaticModal: false,
+      modalTitle: '',
+      inputValue: '',
+      targetTransitionId: '',
     }
   },
   computed: {
     fields () {
       return [ {
+        name: '__slot:pKey',
+        title: this.$t('tables.headings.pKey'),
+        width: '5%',
+      }, {
         name: '__slot:productName',
         title: this.$t('tables.headings.productName'),
         width: '10%',
@@ -88,12 +101,8 @@ export default {
         title: this.$t('tables.headings.nowStatus'),
         width: '3%',
       }, {
-        name: 'lastStatus',
-        title: this.$t('tables.headings.lastStatus'),
-        width: '15%',
-      }, {
-        name: '__slot:batteryStatus',
-        title: this.$t('tables.headings.batteryStatus'),
+        name: '__slot:createdAt',
+        title: this.$t('tables.headings.createdAt'),
         width: '3%',
       }, {
         name: '__slot:memo',
@@ -111,7 +120,38 @@ export default {
       })
     },
   },
+  mounted () {
+    this.fetchDatas(57039)
+  },
   methods: {
+    async fetchDatas (customerId) {
+      let url = process.env.VUE_APP_URL_CHECKER_SERVICE + '/v1/transitions/host/' + customerId
+      let next = ''
+      while (url !== null) {
+        await this.$http.get(url)
+          .then((result) => {
+            console.log(result.data)
+            for (var i = 0; i < result.data.results.length; i++) {
+              this.users.push(result.data.results[i])
+            }
+            next = result.data.next
+          })
+        url = next
+      }
+    },
+    editTransitionMemo (transitionId, note) {
+      let urlHead = '/v1/transitions/'
+      let urlTail = '/note/'
+      let payload = new FormData()
+      payload.append('content', note)
+      this.$http.put(process.env.VUE_APP_URL_CHECKER_SERVICE + urlHead + transitionId + urlTail, payload)
+        .then((result) => {
+          if (result.status === 201) {
+            alert('수정하였습니다.')
+            this.fetchDatas(57039)
+          }
+        })
+    },
     getTrendIcon (user) {
       if (user.trend === 'up') {
         return 'fa fa-caret-up'

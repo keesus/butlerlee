@@ -21,7 +21,7 @@ export default new Router({
     ...demoRoutes,
     {
       path: '*',
-      redirect: { name: 'dashboard' },
+      redirect: { name: 'data' },
     },
     {
       path: '/auth',

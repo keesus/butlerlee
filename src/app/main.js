@@ -13,6 +13,7 @@ import '../i18n/index'
 import YmapPlugin from 'vue-yandex-maps'
 import VueClipboard from 'vue-clipboard2'
 import VeeValidate from 'vee-validate'
+import axios from 'axios'
 
 import '../metrics'
 
@@ -31,6 +32,8 @@ Vue.use(ColorThemePlugin,
       // blurple: '#7289DA',
     },
   })
+
+Vue.prototype.$http = axios
 
 router.beforeEach((to, from, next) => {
   store.commit('setLoading', true)
