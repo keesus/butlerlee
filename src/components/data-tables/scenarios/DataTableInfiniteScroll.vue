@@ -82,7 +82,7 @@ export default {
     fetchData (customerId) {
       this.loading = true
       let url = '/v1/ownerships/host/'
-      this.$http.get(process.env.VUE_APP_URL_CHECKER_SERVICE + url + customerId)
+      this.$http.get(process.env.VUE_APP_URL_CHECKER_SERVICE + url + customerId + '/')
         .then((result) => {
           this.users = result.data
           this.loading = false

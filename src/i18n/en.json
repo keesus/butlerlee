@@ -443,7 +443,7 @@
       "country": "Country",
       "serialNumber": "제품키",
       "productName": "이름",
-      "nowStatus": "현재상태",
+      "nowStatus": "여닫힘",
       "lastStatus": "마지막기록",
       "batteryStatus": "배터리",
       "memo": "메모",

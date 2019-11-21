@@ -2,6 +2,20 @@ const path = require('path')
 
 let config
 
+// module.exports = {
+//   publicPath: process.env.NODE_ENV === 'production'
+//     ? '/butlerlee-hosting/'
+//     : '/',
+// }
+
+if (process.env.NODE_ENV === 'production') {
+  config = {
+    publicPath: process.env.NODE_ENV === 'production'
+      ? '/butlerlee-hosting/'
+      : '/',
+  }
+}
+
 if (process.env.VUE_APP_BOOK) {
   config = {
     lintOnSave: false,
@@ -16,6 +30,7 @@ if (process.env.VUE_APP_BOOK) {
 
 if (!process.env.VUE_APP_BOOK) {
   config = {
+    publicPath: '/butlerlee-hosting/',
     lintOnSave: false,
     pages: {
       index: {
@@ -27,7 +42,7 @@ if (!process.env.VUE_APP_BOOK) {
         filename: 'index.html',
         // when using title option,
         // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
-        title: 'Vuestic Admin',
+        title: 'Butlerlee Admin',
         // chunks to include on this page, by default includes
         // extracted common chunks and vendor chunks.
         chunks: ['chunk-vendors', 'chunk-common', 'index'],

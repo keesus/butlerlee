@@ -19,7 +19,6 @@
         />
       </div>
     </div>
-
     <va-data-table
       :fields="fields"
       :data="filteredData"
@@ -42,14 +41,15 @@
       </template>
       <template slot="createdAt" slot-scope="props">
         <div>
-          {{ props.rowData.created_at }}
+          {{ props.rowData.created_at.split('T')[0] }}
+          {{ props.rowData.created_at.split('T')[1].split('.')[0]}}
         </div>
       </template>
       <template slot="memo" slot-scope="props">
         <div>
           {{props.rowData.note}}
           <button @click="showStaticModal = true,
-          modalTitle='메모 변경', inputValue=props.rowData.memo,
+          modalTitle='메모 변경', inputValue=props.rowData.note,
           targetTransitionId=props.rowData.id">수정</button>
         </div>
       </template>
@@ -114,7 +114,6 @@ export default {
       if (!this.term || this.term.length < 1) {
         return this.users
       }
-
       return this.users.filter(item => {
         return item.productName.toLowerCase().startsWith(this.term.toLowerCase())
       })
@@ -125,13 +124,14 @@ export default {
   },
   methods: {
     async fetchDatas (customerId) {
-      let url = process.env.VUE_APP_URL_CHECKER_SERVICE + '/v1/transitions/host/' + customerId
+      let url = process.env.VUE_APP_URL_CHECKER_SERVICE + '/v1/transitions/host/' + customerId + '/'
       let next = ''
       while (url !== null) {
         await this.$http.get(url)
           .then((result) => {
-            console.log(result.data)
+            // console.log(result.data)
             for (var i = 0; i < result.data.results.length; i++) {
+              result.data.results[i].transition_type = this.convertType(result.data.results[i].transition_type)
               this.users.push(result.data.results[i])
             }
             next = result.data.next
@@ -139,18 +139,31 @@ export default {
         url = next
       }
     },
-    editTransitionMemo (transitionId, note) {
+    async editTransitionMemo (transitionId, note) {
       let urlHead = '/v1/transitions/'
       let urlTail = '/note/'
       let payload = new FormData()
       payload.append('content', note)
-      this.$http.put(process.env.VUE_APP_URL_CHECKER_SERVICE + urlHead + transitionId + urlTail, payload)
+      await this.$http.put(process.env.VUE_APP_URL_CHECKER_SERVICE + urlHead + transitionId + urlTail, payload)
         .then((result) => {
           if (result.status === 201) {
             alert('수정하였습니다.')
-            this.fetchDatas(57039)
+            // this.fetchDatas(57039)
+            this.$nextTick(function () {
+              this.users = []
+              this.fetchDatas(57039)
+              // do something cool
+            })
           }
         })
+    },
+    convertType (type) {
+      if (type === 'TYPE_OPEN') {
+        return '열림'
+      }
+      if (type === 'TYPE_CLOSE') {
+        return '닫힘'
+      }
     },
     getTrendIcon (user) {
       if (user.trend === 'up') {
